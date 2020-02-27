@@ -13,12 +13,6 @@ public class AVL_Tree{
 	public void insert() {
 	}	
 			
-			
-			
-			
-			
-			
-			
 	/*
 	 * AVLNode is added as a class inside the tree as it is a 
 	 * component of the tree, where the tree is accessed in order 
