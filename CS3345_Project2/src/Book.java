@@ -1,5 +1,5 @@
 public class Book{
-	private boolean debug = true;
+	private boolean debug = false;
 	private String ISBN = "";
 	private String title = "";
 	private String author = "";
@@ -51,5 +51,8 @@ public class Book{
 	}
 	public String getTitle() {
 		return title;
+	}
+	public void debug(boolean b) {
+		debug = b;
 	}
 }

@@ -7,6 +7,7 @@ import java.io.*;
  */
 
 class FileHandler{
+	private boolean debug = false;
 	public Book[] books;
 	private int arrayLength = 10;
 	private int numBooks = 0;
@@ -61,5 +62,8 @@ class FileHandler{
 	}
 	public int length() {
 		return numBooks;
+	}
+	public void debug(boolean b) {
+		debug = b;
 	}
 }
