@@ -8,28 +8,48 @@ import java.io.*;
 
 class FileHandler{
 	public Book[] books;
+	private int listLength = 10;
 	public FileHandler(String fileName) {
 		String line = "";
 		int c;
+		books = new Book[listLength];
 		try {
 			File file = new File(fileName);
 			FileReader in = new FileReader(file);
 			int i = 0;
 			while((c = in.read()) != -1) {
 				if((char)c == '\n') {
-					books[i] = new Book(line);
+					addBook(i, line);
 					line = "";
 					i++;
+					//c = in.read();
+				}
+				else if((char)c == '\r') {
+					
 				}
 				else {
 					line += (char)c;
 				}
 			}
+			addBook(i, line);
 			in.close();
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	private void addBook(int i, String s) {
+		if(i == listLength)
+			expandList();	
+		books[i] = new Book(s);
+	}
+	private void expandList() {
+		Book[] temp = new Book[listLength*2];
+		for(int i = 0; i < listLength; i ++) {
+			temp[i] = books[i];
+		}
+		listLength *= 2;
+		books = temp;
 	}
 	public Book[] getBooks() {
 		return books;

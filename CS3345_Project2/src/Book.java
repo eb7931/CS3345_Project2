@@ -27,10 +27,9 @@ public class Book{
 			reverseAuthor += line.charAt(titleEnd);
 			titleEnd--;
 		}
-		for(int i = reverseAuthor.length() - 1; i > 0; i--) {
+		for(int i = reverseAuthor.length() - 1; i >= 0; i--) {
 			author += reverseAuthor.charAt(i);
 		}
-		titleEnd--;
 		for(int i = titleStart; i < titleEnd; i++) {
 			title += line.charAt(i);
 		}
