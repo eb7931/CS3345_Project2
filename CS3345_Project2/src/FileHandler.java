@@ -8,11 +8,12 @@ import java.io.*;
 
 class FileHandler{
 	public Book[] books;
-	private int listLength = 10;
+	private int arrayLength = 10;
+	private int numBooks = 0;
 	public FileHandler(String fileName) {
 		String line = "";
 		int c;
-		books = new Book[listLength];
+		books = new Book[arrayLength];
 		try {
 			File file = new File(fileName);
 			FileReader in = new FileReader(file);
@@ -39,16 +40,17 @@ class FileHandler{
 		}
 	}
 	private void addBook(int i, String s) {
-		if(i == listLength)
+		if(i == arrayLength)
 			expandList();	
 		books[i] = new Book(s);
+		numBooks++;
 	}
 	private void expandList() {
-		Book[] temp = new Book[listLength*2];
-		for(int i = 0; i < listLength; i ++) {
+		Book[] temp = new Book[arrayLength*2];
+		for(int i = 0; i < arrayLength; i ++) {
 			temp[i] = books[i];
 		}
-		listLength *= 2;
+		arrayLength *= 2;
 		books = temp;
 	}
 	public Book[] getBooks() {
@@ -56,5 +58,8 @@ class FileHandler{
 	}
 	public Book getBook(int i) {
 		return books[i];
+	}
+	public int length() {
+		return numBooks;
 	}
 }
