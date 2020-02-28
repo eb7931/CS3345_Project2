@@ -19,19 +19,36 @@ public class AVL_Tree{
 	private AVLNode head = null;
 	private boolean debug = false;
 	public void insert(Book b) {
-		balancedInsert(head, new AVLNode(b));
+		if(debug) {
+			System.out.println("\nInserting ISBN: " + b.key());
+		}
+		AVLNode n = new AVLNode(b);
+		if(head == null) {
+			head = n;
+		}
+		else
+			balancedInsert(head, n);
+		if(head.getHeight() > 0) {
+			balance(head, n);
+		}
+		if(debug) {
+			System.out.println("Head has: ");
+			print(head);
+		}
 	}	
 	private void balancedInsert(AVLNode parent, AVLNode n) {
-		if(parent == null) {
+	/*	if(parent == null) {
 			parent = n;
 		}
-		else if(parent.key().compareTo(n.key()) < 0) {
+		else 
+		*/
+		if(parent.key().compareTo(n.key()) > 0) {
 			if(parent.leftPtr() != null) 
 				balancedInsert(parent.leftPtr(), n);
 			else
 				parent.setLeft(n);
 		}
-		else if(parent.key().compareTo(n.key()) > 0) {
+		else if(parent.key().compareTo(n.key()) < 0) {
 			if(parent.rightPtr() != null)
 				balancedInsert(parent.rightPtr(), n);
 			else
@@ -40,7 +57,8 @@ public class AVL_Tree{
 		if(parent.getHeight() == max(parent.leftHeight(), parent.rightHeight())) {
 			parent.setHeight(parent.getHeight() + 1);
 		}
-		balance(parent, n);
+		if(parent.getHeight() > 0)
+			balance(parent, n);
 		print(parent);
 	}
 	/*
@@ -56,8 +74,8 @@ public class AVL_Tree{
 	private void balance(AVLNode z, AVLNode x) {
 		AVLNode g = null;
 		AVLNode p = null;
-		int leftChildBalance = z.leftPtr().leftHeight() - z.leftPtr().rightHeight();
-		int rightChildBalance = z.rightPtr().leftHeight() - z.rightPtr().rightHeight();
+		int leftChildBalance = BalanceNumber(z.leftPtr());
+		int rightChildBalance = BalanceNumber(z.rightPtr());
 		boolean leftChild = false;
 		boolean imbalanced = false;
 		boolean leftHeavy = false;
@@ -140,17 +158,29 @@ public class AVL_Tree{
 		x.setLeft(g);
 		x.setRight(p);			
 	}
-	private int max(int a, int b) {
-		if(a <= b) {
-			return b;
+	private int BalanceNumber(AVLNode n) {
+		int rHeight = -1;
+		int lHeight = -1;
+		if(n != null) {
+			if(n.rightPtr() != null) 
+				rHeight = n.rightHeight();
+			if(n.rightPtr() != null) 
+				rHeight = n.rightHeight();
 		}
-		else {
-			return a;
-		}
+		return lHeight-rHeight;
 	}
+
+	private int max(int a, int b) {
+			if(a <= b) {
+				return b;
+			}
+			else {
+				return a;
+			}
+		}
 	private void print(AVLNode n) {
 		if(debug) {
-			System.out.println("ParentKey: " + n.key());
+			System.out.println("\nParentKey: " + n.key());
 			if(n.leftPtr() != null)
 				System.out.println("LeftKey: " + n.leftPtr.key());
 			else
@@ -171,57 +201,57 @@ public class AVL_Tree{
 	 * never be accessed directly so are private.
 	 */
 	private class AVLNode {
-		private String key; // (ISBN number)
-		private Book value; //create a class representing a book with minimum attributes
-		private int height;
-		private AVLNode leftPtr;
-		private AVLNode rightPtr;
-		
-		public void setLeft(AVLNode n) {
-			leftPtr = n;
-		}
-		public void setRight(AVLNode n) {
-			rightPtr = n;
-		}
-		public AVLNode rightPtr() {
-			return rightPtr;
-		}
-		public AVLNode leftPtr() {
-			return leftPtr;
-		}
-		public AVLNode(Book b) {
-			value = b;
-			key = value.key();
-			height = 0;
-			leftPtr = null;
-			rightPtr = null;
-		}
-		public int leftHeight() {
-			if(leftPtr == null) {
-				return -1;
-			}
-			else {
-				return leftPtr.getHeight();
-			}
-		}
-		public int rightHeight() {
-			if(rightPtr == null) {
-				return -1;
-			}
-			else {
-				return rightPtr.getHeight();
-			}
-		}
-		public int getHeight() {
-			return height;
-		}
-		public void setHeight(int h){
-			height = h;
-		}
-		public String key() {
-			return key;
-		}
-	}
-		
+			private String key; // (ISBN number)
+			private Book value; //create a class representing a book with minimum attributes
+			private int height;
+			private AVLNode leftPtr;
+			private AVLNode rightPtr;
 			
-}
+			public void setLeft(AVLNode n) {
+				leftPtr = n;
+			}
+			public void setRight(AVLNode n) {
+				rightPtr = n;
+			}
+			public AVLNode rightPtr() {
+				return rightPtr;
+			}
+			public AVLNode leftPtr() {
+				return leftPtr;
+			}
+			public AVLNode(Book b) {
+				value = b;
+				key = value.key();
+				height = 0;
+				leftPtr = null;
+				rightPtr = null;
+			}
+			public int leftHeight() {
+				if(leftPtr == null) {
+					return -1;
+				}
+				else {
+					return leftPtr.getHeight();
+				}
+			}
+			public int rightHeight() {
+				if(rightPtr == null) {
+					return -1;
+				}
+				else {
+					return rightPtr.getHeight();
+				}
+			}
+			public int getHeight() {
+				return height;
+			}
+			public void setHeight(int h){
+				height = h;
+			}
+			public String key() {
+				return key;
+			}
+		}
+			
+				
+	}
