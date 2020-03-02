@@ -150,7 +150,7 @@ public class AVL_Tree{
 	}
 	
 	private void fixLL(boolean l, AVLNode z, AVLNode g, AVLNode p) {
-		System.out.print("fixed in Left Rotation\n");
+		System.out.print("fixed in Right Rotation\n");
 		if(l) {
 			if(g == head) {
 				head = p;
@@ -174,7 +174,7 @@ public class AVL_Tree{
 	}
 	
 	private void fixRR(boolean l, AVLNode z, AVLNode g, AVLNode p) {
-		System.out.print("fixed in Right Rotation\n");
+		System.out.print("fixed in Left Rotation\n");
 		if(l) {
 			if(g == head) {
 				head = p;
