@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /*
  * This class will be responsible for inserting and deleting nodes
  * during which processes it will also check heights and determine
@@ -54,11 +58,10 @@ public class AVL_Tree{
 			else
 				parent.setRight(n);
 		}
-		if(parent.getHeight() == max(parent.leftHeight(), parent.rightHeight())) {
-			parent.setHeight(parent.getHeight() + 1);
-		}
-		if(parent.getHeight() > 0)
-			balance(parent, n);
+		parent.setHeight(max(parent.leftHeight(), parent.rightHeight()) + 1);
+		
+		//if(parent.getHeight() > 0)
+		balance(parent, n);
 		print(parent);
 	}
 	/*
@@ -79,21 +82,7 @@ public class AVL_Tree{
 		boolean leftChild = false;
 		boolean imbalanced = false;
 		boolean leftHeavy = false;
-		if(leftChildBalance < -1 ) {
-			imbalanced = true;
-			leftHeavy = false;
-			leftChild = true;
-			g = z.leftPtr();
-			p = g.rightPtr();
-		}
-		else if(leftChildBalance > 1) {
-			imbalanced = true;
-			leftHeavy = true;
-			leftChild = true;
-			g = z.leftPtr();
-			p = g.leftPtr();
-		}
-		else if(rightChildBalance < -1) {
+		if(rightChildBalance < -1) {
 			imbalanced = true;
 			leftHeavy = false;
 			leftChild = false;
@@ -107,14 +96,46 @@ public class AVL_Tree{
 			g = z.rightPtr();
 			p = g.leftPtr();
 		}
+		else if(leftChildBalance < -1 ) {
+			imbalanced = true;
+			leftHeavy = false;
+			leftChild = true;
+			g = z.leftPtr();
+			p = g.rightPtr();
+		}
+		else if(leftChildBalance > 1) {
+			imbalanced = true;
+			leftHeavy = true;
+			leftChild = true;
+			g = z.leftPtr();
+			p = g.leftPtr();
+		}
+		else if(z == head) {
+			int headBalance = BalanceNumber(z);
+			if(headBalance < -1){
+				leftHeavy = false;
+				imbalanced = true;
+				g = z;
+				p = z.rightPtr();
+			}
+			else if(headBalance > 1) {
+				leftHeavy = true;
+				imbalanced = true;
+				g = z;
+				p = z.leftPtr();
+			}
+		}
 		if(imbalanced) {
-			if(p.rightPtr() == x) {
+			printImbalance(x);
+			if(debug) 
+				System.out.println("P is " + p.key());
+			if(p.key().compareTo(x.key()) < 0) {
 				if(leftHeavy) 
 					fixLR(leftChild,z,g,p,x);
 				else
 					fixRR(leftChild,z,g,p);
 			}
-			else if(p.leftPtr() == x) {
+			else if(p.key().compareTo(x.key()) > 0) {
 				if(leftHeavy)
 					fixLL(leftChild,z,g,p);
 				else
@@ -122,54 +143,121 @@ public class AVL_Tree{
 			}
 		}
 	}
+	private void fixHeight(AVLNode n) {
+		n.setHeight(max(n.leftHeight(), n.rightHeight()) + 1);
+	}
 	private void fixLL(boolean l, AVLNode z, AVLNode g, AVLNode p) {
-		if(l)
-			z.setLeft(p);
-		else
-			z.setRight(p);
+		System.out.print("fixed in Left Rotation\n");
+		if(l) {
+			if(g == head) {
+				head = p;
+			}
+			else
+				z.setLeft(p);
+		}
+		else {
+			if(g == head) {
+				head = p;
+			}
+			else
+				z.setRight(p);		
+		}
 		g.setLeft(p.rightPtr());
 		p.setRight(g);
+		fixHeight(g);
+		fixHeight(p);
+		fixHeight(z);
+		fixHeight(head);
 	}
 	private void fixRR(boolean l, AVLNode z, AVLNode g, AVLNode p) {
-		if(l)
-			z.setLeft(p);
-		else
-			z.setRight(p);
+		System.out.print("fixed in Right Rotation\n");
+		if(l) {
+			if(g == head) {
+				head = p;
+			}
+			else
+				z.setLeft(p);
+		}
+		else {
+			if(g == head) {
+				head = p;
+			}
+			else
+				z.setRight(p);
+		}
 		g.setRight(p.leftPtr());
 		p.setLeft(g);
+		fixHeight(g);
+		fixHeight(p);
+		fixHeight(z);
+		fixHeight(head);
 	}
 	private void fixLR(boolean l, AVLNode z, AVLNode g, AVLNode p, AVLNode x) {
-		if(l)
+		System.out.print("fixed in LeftRight Rotation\n");
+		if(l) {
+			if(g == head) {
+				head = p;
+			}
+			else
 			z.setLeft(x);
-		else
+		}
+		else {
+			if(g == head) {
+				head = p;
+			}
+			else
 			z.setRight(x);
+		}
 		g.setLeft(x.rightPtr());
 		p.setRight(x.leftPtr());
 		x.setRight(g);
 		x.setLeft(p);		
+		fixHeight(g);
+		fixHeight(p);
+		fixHeight(x);
+		fixHeight(z);
+		fixHeight(head);
 	}
 	private void fixRL(boolean l, AVLNode z, AVLNode g, AVLNode p, AVLNode x) {
-		if(l)
+		System.out.print("fixed in RightLeft Rotation\n");
+		if(l) {
+			if(g == head) {
+				head = p;
+			}
+			else
 			z.setLeft(x);
-		else
+		}
+		else {
+			if(g == head) {
+				head = p;
+			}
+			else
 			z.setRight(x);
+		}
 		g.setRight(x.leftPtr());
 		p.setLeft(x.rightPtr());
 		x.setLeft(g);
-		x.setRight(p);			
+		x.setRight(p);		
+		fixHeight(g);
+		fixHeight(p);
+		fixHeight(x);
+		fixHeight(z);
+		fixHeight(head);
 	}
 	private int BalanceNumber(AVLNode n) {
 		int rHeight = -1;
 		int lHeight = -1;
 		if(n != null) {
-			if(n.rightPtr() != null) 
-				rHeight = n.rightHeight();
+			if(n.leftPtr() != null) 
+				lHeight = n.leftHeight();
 			if(n.rightPtr() != null) 
 				rHeight = n.rightHeight();
 		}
 		return lHeight-rHeight;
 	}
-
+	private void printImbalance(AVLNode n) {
+		System.out.print("Imbalance occurred at inserting ISBN " + n.key() + ": ");
+	}
 	private int max(int a, int b) {
 			if(a <= b) {
 				return b;
@@ -194,6 +282,21 @@ public class AVL_Tree{
 	public void debug(boolean b) {
 		debug = b;
 	}
+	public void printTree() {
+		System.out.print(head.toString());
+	}
+	public void printInOrder() {
+		printInOrder(head);
+	}
+	public void printInOrder(AVLNode n) {
+		if(n.leftPtr != null) {
+			printInOrder(n.leftPtr());
+		}
+		System.out.println(n.key() + " Height: " + n.getHeight());
+		if(n.rightPtr() != null) {
+			printInOrder(n.rightPtr());
+		}
+	}
 	/*
 	 * AVLNode is added as a class inside the tree as it is a 
 	 * component of the tree, where the tree is accessed in order 
@@ -206,7 +309,30 @@ public class AVL_Tree{
 			private int height;
 			private AVLNode leftPtr;
 			private AVLNode rightPtr;
-			
+			private List<AVLNode> children;
+		    public String toString() {
+		        StringBuilder buffer = new StringBuilder(50);
+		        print(buffer, "", "");
+		        return buffer.toString();
+		    }    
+		    private void print(StringBuilder buffer, String prefix, String childrenPrefix) {
+		    	children = new ArrayList<>();
+		    	if(leftPtr != null)
+		    		children.add(leftPtr);
+		    	if(rightPtr != null)
+		    		children.add(rightPtr);
+		    	buffer.append(prefix);
+		        buffer.append(key);
+		        buffer.append('\n');
+		        for (Iterator<AVLNode> it = children.iterator(); it.hasNext();) {
+		            AVLNode next = it.next();
+		            if (it.hasNext()) {
+		                next.print(buffer, childrenPrefix + "|__ ", childrenPrefix + "|   ");
+		            } else {
+		                next.print(buffer, childrenPrefix + "\\__ ", childrenPrefix + "    ");
+		            }
+		        }
+		    }
 			public void setLeft(AVLNode n) {
 				leftPtr = n;
 			}
@@ -251,7 +377,5 @@ public class AVL_Tree{
 			public String key() {
 				return key;
 			}
-		}
-			
-				
+		}		
 	}
