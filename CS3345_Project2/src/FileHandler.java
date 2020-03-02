@@ -11,10 +11,12 @@ class FileHandler{
 	public Book[] books;
 	private int arrayLength = 10;
 	private int numBooks = 0;
+	
 	public FileHandler(String fileName) {
 		String line = "";
 		int c;
 		books = new Book[arrayLength];
+		
 		try {
 			File file = new File(fileName);
 			FileReader in = new FileReader(file);
@@ -40,29 +42,36 @@ class FileHandler{
 			e.printStackTrace();
 		}
 	}
+	
 	private void addBook(int i, String s) {
 		if(i == arrayLength)
 			expandList();	
 		books[i] = new Book(s);
 		numBooks++;
 	}
+	
 	private void expandList() {
 		Book[] temp = new Book[arrayLength*2];
+		
 		for(int i = 0; i < arrayLength; i ++) {
 			temp[i] = books[i];
 		}
 		arrayLength *= 2;
 		books = temp;
 	}
+	
 	public Book[] getBooks() {
 		return books;
 	}
+	
 	public Book getBook(int i) {
 		return books[i];
 	}
+	
 	public int length() {
 		return numBooks;
 	}
+	
 	public void debug(boolean b) {
 		debug = b;
 	}

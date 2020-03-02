@@ -19,9 +19,11 @@ import java.util.List;
  * String1.compareTo(String2) < 0 will indicate that String1 < String2
  * String1.compareTo(String2) > 0 will indicate that String1 > String2
  */
+
 public class AVL_Tree{
 	private AVLNode head = null;
 	private boolean debug = false;
+	
 	public void insert(Book b) {
 		if(debug) {
 			System.out.println("\nInserting ISBN: " + b.key());
@@ -40,12 +42,8 @@ public class AVL_Tree{
 			print(head);
 		}
 	}	
+	
 	private void balancedInsert(AVLNode parent, AVLNode n) {
-	/*	if(parent == null) {
-			parent = n;
-		}
-		else 
-		*/
 		if(parent.key().compareTo(n.key()) > 0) {
 			if(parent.leftPtr() != null) 
 				balancedInsert(parent.leftPtr(), n);
@@ -64,6 +62,7 @@ public class AVL_Tree{
 		balance(parent, n);
 		print(parent);
 	}
+	
 	/*
 	 * In order to make it possible to rearrange all the nodes related to a given
 	 * rotation, I am going to call balance when a nodes CHILDREN are out of balance
@@ -74,6 +73,7 @@ public class AVL_Tree{
 	 * I call here z the parent of the imbalanced, g the imbalanced, 
 	 * p the parent of x and child of g, x the inserted
 	 */
+	
 	private void balance(AVLNode z, AVLNode x) {
 		AVLNode g = null;
 		AVLNode p = null;
@@ -82,6 +82,7 @@ public class AVL_Tree{
 		boolean leftChild = false;
 		boolean imbalanced = false;
 		boolean leftHeavy = false;
+		
 		if(rightChildBalance < -1) {
 			imbalanced = true;
 			leftHeavy = false;
@@ -143,9 +144,11 @@ public class AVL_Tree{
 			}
 		}
 	}
+	
 	private void fixHeight(AVLNode n) {
 		n.setHeight(max(n.leftHeight(), n.rightHeight()) + 1);
 	}
+	
 	private void fixLL(boolean l, AVLNode z, AVLNode g, AVLNode p) {
 		System.out.print("fixed in Left Rotation\n");
 		if(l) {
@@ -169,6 +172,7 @@ public class AVL_Tree{
 		fixHeight(z);
 		fixHeight(head);
 	}
+	
 	private void fixRR(boolean l, AVLNode z, AVLNode g, AVLNode p) {
 		System.out.print("fixed in Right Rotation\n");
 		if(l) {
@@ -192,6 +196,7 @@ public class AVL_Tree{
 		fixHeight(z);
 		fixHeight(head);
 	}
+	
 	private void fixLR(boolean l, AVLNode z, AVLNode g, AVLNode p, AVLNode x) {
 		System.out.print("fixed in LeftRight Rotation\n");
 		if(l) {
@@ -218,6 +223,7 @@ public class AVL_Tree{
 		fixHeight(z);
 		fixHeight(head);
 	}
+	
 	private void fixRL(boolean l, AVLNode z, AVLNode g, AVLNode p, AVLNode x) {
 		System.out.print("fixed in RightLeft Rotation\n");
 		if(l) {
@@ -244,6 +250,7 @@ public class AVL_Tree{
 		fixHeight(z);
 		fixHeight(head);
 	}
+	
 	private int BalanceNumber(AVLNode n) {
 		int rHeight = -1;
 		int lHeight = -1;
@@ -255,9 +262,11 @@ public class AVL_Tree{
 		}
 		return lHeight-rHeight;
 	}
+	
 	private void printImbalance(AVLNode n) {
 		System.out.print("Imbalance occurred at inserting ISBN " + n.key() + ": ");
 	}
+	
 	private int max(int a, int b) {
 			if(a <= b) {
 				return b;
@@ -279,15 +288,19 @@ public class AVL_Tree{
 				System.out.println("RightKey: null");
 		}
 	}
+	
 	public void debug(boolean b) {
 		debug = b;
 	}
+	
 	public void printTree() {
 		System.out.print(head.toString());
 	}
+	
 	public void printInOrder() {
 		printInOrder(head);
 	}
+	
 	public void printInOrder(AVLNode n) {
 		if(n.leftPtr != null) {
 			printInOrder(n.leftPtr());
@@ -297,12 +310,14 @@ public class AVL_Tree{
 			printInOrder(n.rightPtr());
 		}
 	}
+	
 	/*
 	 * AVLNode is added as a class inside the tree as it is a 
 	 * component of the tree, where the tree is accessed in order 
 	 * to retrieve information of nodes, the nodes should
 	 * never be accessed directly so are private.
 	 */
+	
 	private class AVLNode {
 			private String key; // (ISBN number)
 			private Book value; //create a class representing a book with minimum attributes
@@ -310,13 +325,17 @@ public class AVL_Tree{
 			private AVLNode leftPtr;
 			private AVLNode rightPtr;
 			private List<AVLNode> children;
+			
 		    public String toString() {
 		        StringBuilder buffer = new StringBuilder(50);
+		        
 		        print(buffer, "", "");
 		        return buffer.toString();
-		    }    
+		    }   
+		    
 		    private void print(StringBuilder buffer, String prefix, String childrenPrefix) {
 		    	children = new ArrayList<>();
+		    	
 		    	if(leftPtr != null)
 		    		children.add(leftPtr);
 		    	if(rightPtr != null)
@@ -333,18 +352,23 @@ public class AVL_Tree{
 		            }
 		        }
 		    }
+		    
 			public void setLeft(AVLNode n) {
 				leftPtr = n;
 			}
+			
 			public void setRight(AVLNode n) {
 				rightPtr = n;
 			}
+			
 			public AVLNode rightPtr() {
 				return rightPtr;
 			}
+			
 			public AVLNode leftPtr() {
 				return leftPtr;
 			}
+			
 			public AVLNode(Book b) {
 				value = b;
 				key = value.key();
@@ -352,6 +376,7 @@ public class AVL_Tree{
 				leftPtr = null;
 				rightPtr = null;
 			}
+			
 			public int leftHeight() {
 				if(leftPtr == null) {
 					return -1;
@@ -360,6 +385,7 @@ public class AVL_Tree{
 					return leftPtr.getHeight();
 				}
 			}
+			
 			public int rightHeight() {
 				if(rightPtr == null) {
 					return -1;
@@ -368,12 +394,15 @@ public class AVL_Tree{
 					return rightPtr.getHeight();
 				}
 			}
+			
 			public int getHeight() {
 				return height;
 			}
+			
 			public void setHeight(int h){
 				height = h;
 			}
+			
 			public String key() {
 				return key;
 			}
